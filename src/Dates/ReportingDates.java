@@ -21,9 +21,7 @@ public class ReportingDates {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
         cal.add(Calendar.DATE, -7);
-        //cal.add(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek()-14);
         returnDate = df.format(cal.getTime());
-        System.out.println("Last Week: "+returnDate);
         return returnDate;
     }
 
@@ -37,13 +35,12 @@ public class ReportingDates {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
         String firstOfWeek = df.format(cal.getTime());
-        System.out.println("FIrst of week: "+firstOfWeek);
         return firstOfWeek;
     }
 
     public String reportPeriod() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        cal.add(Calendar.WEEK_OF_YEAR, -2);
         SimpleDateFormat df = new SimpleDateFormat("w");
         String week = df.format(cal.getTime());
         return week;

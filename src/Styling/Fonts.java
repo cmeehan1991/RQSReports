@@ -18,4 +18,5 @@ public class Fonts {
     public static final Font SECTION_HEADING = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
     public static final Font COLUMN_HEADER = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
     public static final Font TEXT_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+    
 }

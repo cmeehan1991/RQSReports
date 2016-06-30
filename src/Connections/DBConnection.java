@@ -22,7 +22,6 @@ public class DBConnection {
     public Connection Connect() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Connection Success");
         } catch (ClassNotFoundException cnfe) {
             System.out.println("Connection Fail " + cnfe);
         }
@@ -31,7 +30,6 @@ public class DBConnection {
             InetAddress addr;
             Socket sock = new Socket("100.3.79.178", 3306);
             addr = sock.getInetAddress();
-            System.out.println("Connected to " + addr);
             sock.close();
 
         } catch (java.io.IOException e) {
@@ -43,7 +41,6 @@ public class DBConnection {
         String password = "pccror)1";
         try {
             DBConnection = (Connection) DriverManager.getConnection(url, username, password);
-            System.out.println("Database Connected");
         } catch (SQLException se) {
             System.out.println("No Database " + se);
 

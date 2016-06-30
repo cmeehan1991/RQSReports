@@ -44,11 +44,7 @@ public class WeeklyPDF {
     private static final Font COLUMN_HEADER = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
     private static final Font TEXT_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
     
-    private static final int DECLINES = new CustomerQuoteData().declinedQuotes();
-    private static final int BOOKINGS = new CustomerQuoteData().bookedQuotes();
-    private static final int FEEDBACK = new CustomerQuoteData().feedbackQuotes();
-    private static final int PENDING_RESPONSE = new CustomerQuoteData().pendingQuotes();
-    private static final String REPORT_WEEK = new ReportingDates().reportPeriod();
+ 
 
     public void pdfWriter() {
         PdfWriter writer = null;
@@ -62,11 +58,11 @@ public class WeeklyPDF {
             document.add(header());
             document.add(new Introduction().introduction());
             document.newPage();
-            document.add(regionalAnalysis());
-            document.add(southeastTable());
-            document.add(northEastTable());
-            document.add(midWestTable());
-            document.add(westCoastTable());
+            document.add(new RegionalQuoteData().regionalAnalysis());
+            document.add(new RegionalQuoteData().southeastTable());
+            document.add(new RegionalQuoteData().northEastTable());
+            document.add(new RegionalQuoteData().midWestTable());
+            document.add(new RegionalQuoteData().westCoastTable());
             document.newPage();
             document.add(commoditySection());
             document.add(byCommodityTable());
@@ -94,217 +90,8 @@ public class WeeklyPDF {
         return table;
     }
 
-    
-
-    public static PdfPTable regionalAnalysis() {
-        PdfPTable table = new PdfPTable(1);
-        table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
-        table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
-
-        cell = new PdfPCell(new Phrase("Regional Quote Data", SECTION_HEADING));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(4f);
-        cell.setPaddingBottom(10f);
-        table.addCell(cell);
-        
-        // Account for singular or plural
-        String declined = null;
-        String booked = null;
-        String pending = null;
-        if(DECLINES == 1){
-            declined = DECLINES + " was declined, ";
-        }else{
-            declined = DECLINES + " were declined, ";
-        }
-        
-        if(BOOKINGS == 1){
-            booked = DECLINES + " was booked, ";
-        }else{
-            booked = DECLINES + " were booked, ";
-        }
-        
-        if (PENDING_RESPONSE == 1){
-            pending = PENDING_RESPONSE + " is pending further action.";
-        }else{
-            pending = PENDING_RESPONSE + " are pending further action.";
-        }
-
-        cell = new PdfPCell(new Phrase("In week " + new ReportingDates().reportPeriod() + " a total of " + new CustomerQuoteData().totalNAQuotes() + " quotes were generated through RQS to North American customers (not including Canada). Of these quotes, " + declined + booked + FEEDBACK + " received customer feedback, and " + pending, TEXT_FONT));
-        cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
-        return table;
-
-    }
-
-    public static PdfPTable southeastTable() {
-        PdfPTable table = new PdfPTable(2);
-        table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
-        table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
-
-        cell = new PdfPCell(new Phrase("South East", SUBHEADING_FONT));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setColspan(2);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Customer", COLUMN_HEADER));
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Number of Quotes", COLUMN_HEADER));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        Map<String, String> m = new CustomerQuoteData().southeastQuotes();
-        for (Map.Entry<String, String> entry : m.entrySet()) {
-            cell = new PdfPCell(new Phrase(entry.getKey(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(entry.getValue(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-        }
-        return table;
-    }
-
-    public static PdfPTable northEastTable() {
-        PdfPTable table = new PdfPTable(2);
-        table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
-        table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
-
-        cell = new PdfPCell(new Phrase("North East", SUBHEADING_FONT));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setColspan(2);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Customer", COLUMN_HEADER));
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Number of Quotes", COLUMN_HEADER));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        Map<String, String> m = new CustomerQuoteData().northEastQuotes();
-        for (Map.Entry<String, String> entry : m.entrySet()) {
-            cell = new PdfPCell(new Phrase(entry.getKey(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(entry.getValue(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-        }
-        return table;
-    }
-
-    public static PdfPTable midWestTable() {
-        PdfPTable table = new PdfPTable(2);
-        table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
-        table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
-
-        cell = new PdfPCell(new Phrase("Mid West", SUBHEADING_FONT));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setColspan(2);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Customer", COLUMN_HEADER));
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Number of Quotes", COLUMN_HEADER));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        Map<String, String> m = new CustomerQuoteData().midWestQuotes();
-        for (Map.Entry<String, String> entry : m.entrySet()) {
-            cell = new PdfPCell(new Phrase(entry.getKey(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(entry.getValue(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-        }
-        return table;
-    }
-
-    public static PdfPTable westCoastTable() {
-        PdfPTable table = new PdfPTable(2);
-        table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
-        table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
-
-        cell = new PdfPCell(new Phrase("West Coast", SUBHEADING_FONT));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setColspan(2);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Customer", COLUMN_HEADER));
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Number of Quotes", COLUMN_HEADER));
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        Map<String, String> m = new CustomerQuoteData().westCoastQuotes();
-        for (Map.Entry<String, String> entry : m.entrySet()) {
-            cell = new PdfPCell(new Phrase(entry.getKey(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(entry.getValue(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-        }
-        return table;
-    }
-
-    public static PdfPTable commoditySection() {
+   
+       public static PdfPTable commoditySection() {
         PdfPTable table = new PdfPTable(1);
         table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
         table.setWidthPercentage(100f);

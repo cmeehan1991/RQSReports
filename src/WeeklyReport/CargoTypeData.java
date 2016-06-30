@@ -27,6 +27,7 @@ public class CargoTypeData {
     private int count;
     private ResultSet rs;
     private String topCommodity;
+    private final String LAST_WEEK = new ReportingDates().lastWeek(), THIS_WEEK = new ReportingDates().firstOfCurrentWeek();
 
     private String firstOfCurrentWeek() {
         SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd 00:00");
@@ -61,8 +62,8 @@ public class CargoTypeData {
         }
         return topCommodity;
     }
-    
-    public String topTalCargo(){
+
+    public String topTalCargo() {
         String SQL = "SELECT comm_class, COUNT(comm_class) AS 'COUNT' FROM allquotes WHERE tradeLane = ? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) group by comm_class order by COUNT(comm_class) desc LIMIT ?";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
@@ -84,8 +85,8 @@ public class CargoTypeData {
         }
         return topCommodity;
     }
-    
-    public String topEcamsCargo(){
+
+    public String topEcamsCargo() {
         String SQL = "SELECT comm_class, COUNT(comm_class) AS 'COUNT' FROM allquotes WHERE tradeLane = ? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) group by comm_class order by COUNT(comm_class) desc LIMIT ?";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
@@ -108,7 +109,7 @@ public class CargoTypeData {
         return topCommodity;
     }
 
-    public String topNaxCargo(){
+    public String topNaxCargo() {
         String SQL = "SELECT comm_class, COUNT(comm_class) AS 'COUNT' FROM allquotes WHERE tradeLane = ? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) group by comm_class order by COUNT(comm_class) desc LIMIT ?";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
@@ -130,7 +131,7 @@ public class CargoTypeData {
         }
         return topCommodity;
     }
-    
+
     protected Map<String, String> topTwoCommodities() {
         String SQL = "SELECT comm_class, COUNT(comm_class) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE (rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=?) AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) group by comm_class order by COUNT(comm_class) desc LIMIT ?";
         try {
@@ -158,7 +159,7 @@ public class CargoTypeData {
         return names;
     }
 
-    protected Map<String, String> quotesByCommodity() {
+    public Map<String, String> quotesByCommodity() {
         String SQL = "SELECT comm_class, COUNT(comm_class) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE (rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=?) AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) group by comm_class order by COUNT(comm_class) desc LIMIT ?";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
@@ -184,7 +185,7 @@ public class CargoTypeData {
 
         return names;
     }
-
+ 
     protected double automobiles() {
         String SQL = "SELECT COUNT(*) AS 'TOTAL' FROM allquotes WHERE IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED >='" + firstOfCurrentWeek() + "', DATE_UPDATED>='" + firstOfCurrentWeek() + "') AND comm_class LIKE 'Automobile%'";
         try {
