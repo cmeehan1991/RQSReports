@@ -50,7 +50,7 @@ public class WeeklyPDF {
         PdfWriter writer = null;
         Document document = new Document();
         try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\cmeehan\\Desktop\\Weekly Report.pdf"));
+            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Weekly Reports\\Week "+new ReportingDates().reportPeriod()+" Quoting Report.pdf"));
             document.open();
             document.add(new CoverPage().backgroundImage());
             document.add(new CoverPage().coverTable());
