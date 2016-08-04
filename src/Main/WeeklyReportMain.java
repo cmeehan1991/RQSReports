@@ -44,7 +44,7 @@ public class WeeklyReportMain {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (getTime().equals("Thu 12:50:00")) {
+                if (getTime().equals("Mon 07:45:00")) {
                     WeeklyPDF pdf = new WeeklyReport.WeeklyPDF();
                     WeeklyEmail email = new Email.WeeklyEmail();
                 }
@@ -83,9 +83,9 @@ public class WeeklyReportMain {
     
     
     public static void main(String... args) {
-        //sendReport();
-        //showTimer().setVisible(true);
-        new WeeklyPDF();
+        sendReport();
+        showTimer().setVisible(true);
+        //new WeeklyPDF();
     }
 
 }

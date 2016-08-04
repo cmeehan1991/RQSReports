@@ -132,7 +132,7 @@ public class CargoTypeData {
         return topCommodity;
     }
 
-    protected Map<String, String> topTwoCommodities() {
+    public Map<String, String> topTwoCommodities() {
         String SQL = "SELECT comm_class, COUNT(comm_class) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE (rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=?) AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) group by comm_class order by COUNT(comm_class) desc LIMIT ?";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
@@ -157,6 +157,33 @@ public class CargoTypeData {
         }
 
         return names;
+    }
+
+    public Map<Double, String> quotesByCommodityCBM() {
+        Map<Double,String>quotesByCBM = new HashMap<>();
+        String SQL = "SELECT comm_class, ROUND(SUM(packinglist.cbm) * packinglist.quantity,3) AS 'Total CBM' FROM allquotes JOIN packinglist ON packinglist.quoteID = allquotes.ID JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE (rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=? OR  rorocustomers.region=?) AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) group by comm_class LIMIT ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(SQL);
+            ps.setString(1, "South East");
+            ps.setString(2, "North East");
+            ps.setString(3, "Mid West");
+            ps.setString(4, "West Coast");
+            ps.setString(5, "0000-00-00 00:00");
+            ps.setString(6, new ReportingDates().lastWeek());
+            ps.setString(7, new ReportingDates().lastWeek());
+            ps.setString(8, "0000-00-00 00:00");
+            ps.setString(9, new ReportingDates().firstOfCurrentWeek());
+            ps.setString(10, new ReportingDates().firstOfCurrentWeek());
+            ps.setInt(11, 10);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                quotesByCBM.put(rs.getDouble("Total CBM"), rs.getString("comm_class"));
+            }
+        } catch (Exception ex) {
+        }
+
+        return quotesByCBM;
     }
 
     public Map<String, String> quotesByCommodity() {
@@ -185,7 +212,7 @@ public class CargoTypeData {
 
         return names;
     }
- 
+
     protected double automobiles() {
         String SQL = "SELECT COUNT(*) AS 'TOTAL' FROM allquotes WHERE IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED >='" + firstOfCurrentWeek() + "', DATE_UPDATED>='" + firstOfCurrentWeek() + "') AND comm_class LIKE 'Automobile%'";
         try {

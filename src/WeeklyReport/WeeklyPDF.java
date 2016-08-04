@@ -7,7 +7,6 @@ package WeeklyReport;
 
 import Dates.ReportingDates;
 import com.itextpdf.awt.DefaultFontMapper;
-import com.itextpdf.awt.PdfGraphics2D;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -24,9 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Map;
 import org.jfree.chart.JFreeChart;
 import WeeklyReport.Sections.*;
@@ -35,7 +32,7 @@ import WeeklyReport.Sections.*;
  *
  * @author cmeehan
  */
-public class WeeklyPDF {
+public final class WeeklyPDF {
 
     private static PdfPCell cell;
     private static final Font HEADING_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
@@ -43,14 +40,12 @@ public class WeeklyPDF {
     private static final Font SECTION_HEADING = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
     private static final Font COLUMN_HEADER = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
     private static final Font TEXT_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
-    
- 
 
     public void pdfWriter() {
         PdfWriter writer = null;
         Document document = new Document();
         try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Weekly Reports\\Week "+new ReportingDates().reportPeriod()+" Quoting Report.pdf"));
+            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Weekly Reports\\Week " + new ReportingDates().reportPeriod() + " Quoting Report.pdf"));
             document.open();
             document.add(new CoverPage().backgroundImage());
             document.add(new CoverPage().coverTable());
@@ -64,12 +59,38 @@ public class WeeklyPDF {
             document.add(new RegionalQuoteData().midWestTable());
             document.add(new RegionalQuoteData().westCoastTable());
             document.newPage();
-            document.add(commoditySection());
-            document.add(byCommodityTable());
+            document.add(new Commodities().commoditySectionIntroduction());
+            document.add(new Commodities().byCommodityTable());
+            document.add(new Commodities().commodityChartImage(writer));
+            if (new CustomerQuoteData().declinedQuotes() >= 1) {
+                document.newPage();
+                document.add(new Declines().declinesByReasonImage(writer));
+                document.add(new Declines().declinesByReasonTable());
+                document.add(new Declines().declinesByCommodityImage(writer));
+                document.add(new Declines().declinesByCommodityTable());
+            }
+            if (new CustomerQuoteData().bookedQuotes() >= 1) {
+                document.newPage();
+                document.add(new Bookings().bookingsByTradelaneImage(writer));
+                document.add(new Bookings().bookingsByPODImage(writer));
+            }
+            document.newPage();
+            document.add(endOfReport());
             document.close();
         } catch (FileNotFoundException | DocumentException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    private PdfPTable endOfReport() {
+        PdfPTable table = new PdfPTable(1);
+        cell = new PdfPCell(new Phrase("End of Report", HEADING_FONT));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setBorderWidth(2f);
+        table.addCell(cell);
+
+        return table;
     }
 
     public static PdfPTable header() {
@@ -87,66 +108,6 @@ public class WeeklyPDF {
         cell.setBorder(Rectangle.BOTTOM);
         table.addCell(cell);
 
-        return table;
-    }
-
-   
-       public static PdfPTable commoditySection() {
-        PdfPTable table = new PdfPTable(1);
-        table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
-        table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
-
-        cell = new PdfPCell(new Phrase("COMMODITIES", SECTION_HEADING));
-        cell.setColspan(1);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
-        // Get the top two commodities from the HashMap
-        Map<String, String> m = new CargoTypeData().topTwoCommodities();
-        //ArrayList to add the commodities to
-        ArrayList<String> commodities = new ArrayList<>();
-        m.entrySet().stream().forEach((entry) -> {
-            commodities.add(entry.getKey());
-        });
-        
-        cell = new PdfPCell(new Phrase("During week "+new ReportingDates().reportPeriod()+" a total of "+new CustomerQuoteData().totalQuotes()+" were generated through RQS. Of these quotes the top two commodity classes quoted were "+commodities.get(0)+" and "+commodities.get(1)+". The below table depicts the top ten commodities quoted during week "+new ReportingDates().reportPeriod()+".", TEXT_FONT));
-        cell.setColspan(1);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-        
-        
-        
-        return table;
-    }
-
-    public static PdfPTable byCommodityTable() {
-        PdfPTable table = new PdfPTable(2);
-        table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
-        table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
-
-        cell = new PdfPCell(new Phrase("Quotes by Commodity", SUBHEADING_FONT));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setColspan(2);
-        cell.setPaddingBottom(10f);
-        cell.setBorder(Rectangle.BOTTOM);
-        cell.setBorderWidthBottom(2f);
-        table.addCell(cell);
-
-        Map<String, String> m = new CargoTypeData().quotesByCommodity();
-        for (Map.Entry<String, String> entry : m.entrySet()) {
-            cell = new PdfPCell(new Phrase(entry.getKey(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(entry.getValue(), TEXT_FONT));
-            cell.setColspan(1);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setBorder(Rectangle.BOTTOM);
-            table.addCell(cell);
-        }
         return table;
     }
 

@@ -49,7 +49,7 @@ public class WeeklyEmail {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(FROM, "RQS Reporting"));
             msg.addRecipients(Message.RecipientType.BCC, SEND_TO_GROUP);
-            msg.setSubject("RQS Weekly Quoting Data");
+            msg.setSubject("RQS Weekly Report");
             msg.setSentDate(new Date());
             
             // creates message part

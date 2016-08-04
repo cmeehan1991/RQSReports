@@ -77,7 +77,7 @@ public class CustomerQuoteData {
     }
 
     public String topSECustomer() {
-                String SQL = "SELECT customerName, COUNT(*) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE rorocustomers.region=? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) GROUP BY customerName ORDER BY COUNT(*) DESC LIMIT 1";
+        String SQL = "SELECT customerName, COUNT(*) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE rorocustomers.region=? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) GROUP BY customerName ORDER BY COUNT(*) DESC LIMIT 1";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             ps.setString(1, "South East");
@@ -98,7 +98,7 @@ public class CustomerQuoteData {
     }
 
     public String topMWCustomer() {
-                String SQL = "SELECT customerName, COUNT(*) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE rorocustomers.region=? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) GROUP BY customerName ORDER BY COUNT(*) DESC LIMIT 1";
+        String SQL = "SELECT customerName, COUNT(*) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE rorocustomers.region=? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) GROUP BY customerName ORDER BY COUNT(*) DESC LIMIT 1";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             ps.setString(1, "Mid West");
@@ -118,7 +118,7 @@ public class CustomerQuoteData {
         return name;
     }
 
-    public String topWCCustomer() {        
+    public String topWCCustomer() {
         String SQL = "SELECT customerName, COUNT(*) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE rorocustomers.region=? AND IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?) GROUP BY customerName ORDER BY COUNT(*) DESC LIMIT 1";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
@@ -145,7 +145,15 @@ public class CustomerQuoteData {
             PreparedStatement ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();
             while (rs.next()) {
-                NAMES.put(new HashMap(){{put(rs.getString("Trade Lane"), rs.getString("Customer Name"));}}, new HashMap(){{put(rs.getString("Total Units"), rs.getString("Total CBM"));}});
+                NAMES.put(new HashMap() {
+                    {
+                        put(rs.getString("Trade Lane"), rs.getString("Customer Name"));
+                    }
+                }, new HashMap() {
+                    {
+                        put(rs.getString("Total Units"), rs.getString("Total CBM"));
+                    }
+                });
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -160,7 +168,15 @@ public class CustomerQuoteData {
             PreparedStatement ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();
             while (rs.next()) {
-                NAMES.put(new HashMap(){{put(rs.getString("Trade Lane"), rs.getString("Customer Name"));}}, new HashMap(){{put(rs.getString("Total Units"), rs.getString("Total CBM"));}});
+                NAMES.put(new HashMap() {
+                    {
+                        put(rs.getString("Trade Lane"), rs.getString("Customer Name"));
+                    }
+                }, new HashMap() {
+                    {
+                        put(rs.getString("Total Units"), rs.getString("Total CBM"));
+                    }
+                });
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -170,12 +186,20 @@ public class CustomerQuoteData {
     }
 
     public Map<Map<String, String>, Map<String, String>> midWestQuotes() {
-       String SQL = "SELECT allquotes.tradeLane AS 'Trade Lane', customerName AS 'Customer Name', ROUND(SUM(packinglist.quantity),0) AS 'Total Units', ROUND(SUM(packinglist.cbm),3) AS 'Total CBM' FROM allquotes JOIN packinglist ON packinglist.quoteID = allquotes.ID JOIN rorocustomers ON rorocustomers.company = allquotes.customerName WHERE rorocustomers.region='Mid West' AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED >= '" + new ReportingDates().lastWeek() + "', DATE_UPDATED >= '" + new ReportingDates().lastWeek() + "') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED <= '" + new ReportingDates().firstOfCurrentWeek() + "', DATE_UPDATED <= '" + new ReportingDates().firstOfCurrentWeek() + "') GROUP BY customerName ORDER BY SUM(packinglist.cbm) DESC LIMIT 10";
+        String SQL = "SELECT allquotes.tradeLane AS 'Trade Lane', customerName AS 'Customer Name', ROUND(SUM(packinglist.quantity),0) AS 'Total Units', ROUND(SUM(packinglist.cbm),3) AS 'Total CBM' FROM allquotes JOIN packinglist ON packinglist.quoteID = allquotes.ID JOIN rorocustomers ON rorocustomers.company = allquotes.customerName WHERE rorocustomers.region='Mid West' AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED >= '" + new ReportingDates().lastWeek() + "', DATE_UPDATED >= '" + new ReportingDates().lastWeek() + "') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED <= '" + new ReportingDates().firstOfCurrentWeek() + "', DATE_UPDATED <= '" + new ReportingDates().firstOfCurrentWeek() + "') GROUP BY customerName ORDER BY SUM(packinglist.cbm) DESC LIMIT 10";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();
             while (rs.next()) {
-                NAMES.put(new HashMap(){{put(rs.getString("Trade Lane"), rs.getString("Customer Name"));}}, new HashMap(){{put(rs.getString("Total Units"), rs.getString("Total CBM"));}});
+                NAMES.put(new HashMap() {
+                    {
+                        put(rs.getString("Trade Lane"), rs.getString("Customer Name"));
+                    }
+                }, new HashMap() {
+                    {
+                        put(rs.getString("Total Units"), rs.getString("Total CBM"));
+                    }
+                });
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -190,7 +214,15 @@ public class CustomerQuoteData {
             PreparedStatement ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();
             while (rs.next()) {
-                NAMES.put(new HashMap(){{put(rs.getString("Trade Lane"), rs.getString("Customer Name"));}}, new HashMap(){{put(rs.getString("Total Units"), rs.getString("Total CBM"));}});
+                NAMES.put(new HashMap() {
+                    {
+                        put(rs.getString("Trade Lane"), rs.getString("Customer Name"));
+                    }
+                }, new HashMap() {
+                    {
+                        put(rs.getString("Total Units"), rs.getString("Total CBM"));
+                    }
+                });
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -214,31 +246,33 @@ public class CustomerQuoteData {
     }
 
     public int bookedQuotes() {
-        String SQL = "SELECT COUNT(*) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE (rorocustomers.region='South East' OR  rorocustomers.region='North East' OR rorocustomers.region='Mid West' OR rorocustomers.region='West Coast') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED >= '" + new ReportingDates().lastWeek() + "', DATE_UPDATED >= '" + new ReportingDates().lastWeek() + "') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED <= '" + new ReportingDates().firstOfCurrentWeek() + "', DATE_UPDATED <= '" + new ReportingDates().firstOfCurrentWeek() + "') AND booked=true";
+        int totalBookings = 0;
+        String SQL = "SELECT COUNT(*) AS 'COUNT' FROM allquotes JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE (rorocustomers.region='South East' OR  rorocustomers.region='North East' OR rorocustomers.region='Mid West' OR rorocustomers.region='West Coast') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED >= '" + new ReportingDates().lastWeek() + "', DATE_UPDATED >= '" + new ReportingDates().lastWeek() + "') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED <= '" + new ReportingDates().firstOfCurrentWeek() + "', DATE_UPDATED <= '" + new ReportingDates().firstOfCurrentWeek() + "') AND booked=true";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();
             if (rs.next()) {
-                count = rs.getInt("COUNT");
+                totalBookings = rs.getInt("COUNT");
             }
         } catch (Exception ex) {
 
         }
-        return count;
+        return totalBookings;
     }
 
     public int pendingQuotes() {
+        int pendingResponse = 0;
         String SQL = "SELECT COUNT(*) AS 'COUNT' FROM allquotes INNER JOIN rorocustomers ON allquotes.customerName = rorocustomers.company WHERE (rorocustomers.region='South East' OR  rorocustomers.region='North East' OR rorocustomers.region='Mid West' OR rorocustomers.region='West Coast') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED >= '" + new ReportingDates().lastWeek() + "', DATE_UPDATED >= '" + new ReportingDates().lastWeek() + "') AND IF(DATE_UPDATED = '0000-00-00 00:00', DATE_QUOTED <= '" + new ReportingDates().firstOfCurrentWeek() + "', DATE_UPDATED <= '" + new ReportingDates().firstOfCurrentWeek() + "') AND deny != true AND booked != true AND feedback != true";
         try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             rs = ps.executeQuery();
             if (rs.next()) {
-                count = rs.getInt("COUNT");
+                pendingResponse = rs.getInt("COUNT");
             }
         } catch (Exception ex) {
 
         }
-        return count;
+        return pendingResponse;
     }
 
     public int feedbackQuotes() {
@@ -254,10 +288,10 @@ public class CustomerQuoteData {
         }
         return count;
     }
-    
-    public String topNASCustomer(){
+
+    public String topNASCustomer() {
         String SQL = "SELECT COUNT(ID), customerName FROM allquotes WHERE tradeLane=? AND (IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?)) GROUP BY customerName ORDER BY COUNT(ID) DESC LIMIT 1";
-        try{
+        try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             ps.setString(1, "North Atlantic Shuttle EB");
             ps.setString(2, "0000-00-00 00:00");
@@ -266,21 +300,21 @@ public class CustomerQuoteData {
             ps.setString(5, "0000-00-00 00:00");
             ps.setString(6, new ReportingDates().firstOfCurrentWeek());
             ps.setString(7, new ReportingDates().firstOfCurrentWeek());
-             rs = ps.executeQuery();
-            if(rs.next()){
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 name = rs.getString("customerName");
-            }else{
+            } else {
                 name = "N/A";
             }
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());            
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
         return name;
     }
-    
-    public String topTALCustomer(){
+
+    public String topTALCustomer() {
         String SQL = "SELECT COUNT(ID), customerName FROM allquotes WHERE tradeLane=? AND (IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?)) GROUP BY customerName ORDER BY COUNT(ID) DESC LIMIT 1";
-        try{
+        try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             ps.setString(1, "Trans-Atlantic EB");
             ps.setString(2, "0000-00-00 00:00");
@@ -289,21 +323,21 @@ public class CustomerQuoteData {
             ps.setString(5, "0000-00-00 00:00");
             ps.setString(6, new ReportingDates().firstOfCurrentWeek());
             ps.setString(7, new ReportingDates().firstOfCurrentWeek());
-             rs = ps.executeQuery();
-            if(rs.next()){
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 name = rs.getString("customerName");
-            }else{
+            } else {
                 name = "N/A";
             }
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());            
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
         return name;
     }
-    
-    public String topECAMSCustomer(){
+
+    public String topECAMSCustomer() {
         String SQL = "SELECT COUNT(ID), customerName FROM allquotes WHERE tradeLane=? AND (IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?)) GROUP BY customerName ORDER BY COUNT(ID) DESC LIMIT 1";
-        try{
+        try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             ps.setString(1, "ECAMS SB");
             ps.setString(2, "0000-00-00 00:00");
@@ -312,21 +346,21 @@ public class CustomerQuoteData {
             ps.setString(5, "0000-00-00 00:00");
             ps.setString(6, new ReportingDates().firstOfCurrentWeek());
             ps.setString(7, new ReportingDates().firstOfCurrentWeek());
-             rs = ps.executeQuery();
-            if(rs.next()){
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 name = rs.getString("customerName");
-            }else{
+            } else {
                 name = "N/A";
             }
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());            
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
         return name;
     }
-    
-    public String topNAXCustomer(){
+
+    public String topNAXCustomer() {
         String SQL = "SELECT COUNT(ID), customerName FROM allquotes WHERE tradeLane=? AND (IF(DATE_UPDATED = ?, DATE_QUOTED >= ?, DATE_UPDATED >= ?) AND IF(DATE_UPDATED = ?, DATE_QUOTED <= ?, DATE_UPDATED <= ?)) GROUP BY customerName ORDER BY COUNT(ID) DESC LIMIT 1";
-        try{
+        try {
             PreparedStatement ps = conn.prepareStatement(SQL);
             ps.setString(1, "NAX WB");
             ps.setString(2, "0000-00-00 00:00");
@@ -335,14 +369,14 @@ public class CustomerQuoteData {
             ps.setString(5, "0000-00-00 00:00");
             ps.setString(6, new ReportingDates().firstOfCurrentWeek());
             ps.setString(7, new ReportingDates().firstOfCurrentWeek());
-             rs = ps.executeQuery();
-            if(rs.next()){
+            rs = ps.executeQuery();
+            if (rs.next()) {
                 name = rs.getString("customerName");
                 System.out.println(name);
-            }else{
+            } else {
                 name = "N/A";
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
         return name;

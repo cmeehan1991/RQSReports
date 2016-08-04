@@ -13,7 +13,6 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -46,29 +45,15 @@ public class RegionalQuoteData {
         cell.setPaddingBottom(10f);
         table.addCell(cell);
 
-        // Account for singular or plural
-        String declined = null;
-        String booked = null;
         String pending = null;
-        if (DECLINES == 1) {
-            declined = DECLINES + " was declined, ";
-        } else {
-            declined = DECLINES + " were declined, ";
-        }
-
-        if (BOOKINGS == 1) {
-            booked = DECLINES + " was booked, ";
-        } else {
-            booked = DECLINES + " were booked, ";
-        }
-
+        
         if (PENDING_RESPONSE == 1) {
             pending = PENDING_RESPONSE + " is pending further action.";
         } else {
             pending = PENDING_RESPONSE + " are pending further action.";
         }
 
-        cell = new PdfPCell(new Phrase("In week " + new ReportingDates().reportPeriod() + " a total of " + new CustomerQuoteData().totalNAQuotes() + " quotes were generated through RQS to North American customers (not including Canada). Of these quotes, " + declined + booked + FEEDBACK + " received customer feedback, and " + pending, TEXT_FONT));
+        cell = new PdfPCell(new Phrase("In week " + new ReportingDates().reportPeriod() + " a total of " + new CustomerQuoteData().totalNAQuotes() + " quotes were generated through RQS to North American customers (not including Canada). Of these quotes there were "+DECLINES+" declines, " + BOOKINGS+" bookings, and " + FEEDBACK + " received customer feedback, and " + pending, TEXT_FONT));
         cell.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
@@ -77,11 +62,11 @@ public class RegionalQuoteData {
 
     }
 
+    
     public PdfPTable southeastTable() {
         PdfPTable table = new PdfPTable(4);
         table.setHorizontalAlignment(Element.ALIGN_MIDDLE);
         table.setWidthPercentage(100f);
-        table.setSpacingBefore(10f);
 
         cell = new PdfPCell(new Phrase("South East", SUBHEADING_FONT));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);

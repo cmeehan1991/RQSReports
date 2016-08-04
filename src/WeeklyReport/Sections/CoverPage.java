@@ -33,7 +33,7 @@ public class CoverPage {
 
     public Image backgroundImage() {
         try {
-            image = Image.getInstance(getClass().getClassLoader().getResource("resources/DGH_Cover.jpg"));
+            image = Image.getInstance(getClass().getClassLoader().getResource("resources/P6200107.jpg"));
             image.scaleAbsolute(PageSize.A4);
             image.setAbsolutePosition(0, 0);
             return image;

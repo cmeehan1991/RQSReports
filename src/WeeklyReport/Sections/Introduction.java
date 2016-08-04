@@ -13,7 +13,6 @@ import static Styling.Fonts.TEXT_FONT;
 import WeeklyReport.CargoTypeData;
 import com.itextpdf.text.Paragraph;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -41,13 +40,13 @@ public class Introduction {
     private final Map<String, String> TOP_THREE_COMMODITIES = new CargoTypeData().quotesByCommodity();
 
     private Paragraph firstParagraph() {
-        paragraph = new Paragraph("This report contains a summary of RQS activity for week " + reportPeriod + ". The purpose of this report is to better guide Account Managers and Senior Management personnel in their weekly sales activities. The RQS weekly report includes data on cargo bookings, customer feedback, commodity movement, and customer activity. The customers identified in this report are United States based accounts that have been identified as potential targets. It is important to note that while some of the accounts listed in this report already have service contracacts, they are listed due to a high amount of activity outside of their contracted rates.", TEXT_FONT);
+        paragraph = new Paragraph("This report contains a summary of RQS quoting activity for Week " + reportPeriod + ". The purpose of this report is to better guide Account Managers and Senior Management personnel in their weekly sales activities. The RQS weekly report includes data on cargo bookings, customer feedback, commodity movement, and customer activity. The customers identified in this report are located in the continenetal United States and have been identified as potential targets. It is important to note that while some of the accounts listed in this report already have service contracts, they are listed due to a high amount of quotations outside of their contracted rates.", TEXT_FONT);
         paragraph.setFirstLineIndent(36f);
         return paragraph;
     }
 
     private Paragraph secondParagraph() {
-        paragraph = new Paragraph("During week " + reportPeriod + " a total of " + totalQuotes + " quotes were generated and/or updated from \"K\" Line America offices to customers and regional offices globally. Of these " + totalQuotes + " quotes, " + totalNAQuotes + " quotes were generated and/or updated for known US customers. The top quoted account from each region was " + TOP_SE_CUSTOMER + " (Southeast), " + TOP_NE_CUSTOMER + " (North East), " + TOP_MW_CUSTOMER + " (Mid-West), and " + TOP_WC_CUSTOMER + " (West Coast).", TEXT_FONT);
+        paragraph = new Paragraph("During Week " + reportPeriod + " a total of " + totalQuotes + " quotes were generated and/or updated from \"K\" Line America offices to customers and regional offices globally. Of these " + totalQuotes + " quotes, " + totalNAQuotes + " quotes were generated and/or updated for known US customers. The top quoted account from each region was " + TOP_SE_CUSTOMER + " (Southeast), " + TOP_NE_CUSTOMER + " (North East), " + TOP_MW_CUSTOMER + " (Mid-West), and " + TOP_WC_CUSTOMER + " (West Coast).", TEXT_FONT);
         paragraph.setFirstLineIndent(36f);
         return paragraph;
     }
@@ -59,7 +58,7 @@ public class Introduction {
             topThree.add(entry.getKey());
         });
 
-        paragraph = new Paragraph("The top three commodity types quoted to United States based customers were " + topThree.get(0) + ", " + topThree.get(1) + ", and " + topThree.get(2) + ". The top commodity quoted on each trade lane was " + TOP_NAS_CARGO + " on the North Atlantic Shuttle East Bound, " + TOP_TAL_CARGO + " on the Trans-Atlantic East Bound, " + TOP_ECAMS_CARGO + " on the ECAMS South Bound, and " + TOP_NAX_CARGO + " on the NAX West Bound. The most quoted customer on each trade lane in week " + reportPeriod + " was "+TOP_NAS_CUSTOMER+" on the NAS, "+TOP_TAL_CUSTOMER+" on the TAL, "+TOP_ECAMS_CUSTOMER+" on the ECAMS, and "+TOP_NAX_CUSTOMER+" on the NAX trade lane.", TEXT_FONT);
+        paragraph = new Paragraph("The top three commodity types quoted to United States based customers were " + topThree.get(0) + ", " + topThree.get(1) + ", and " + topThree.get(2) + ". The top commodity quoted on each trade lane was " + TOP_NAS_CARGO + " on the North Atlantic Shuttle East Bound, " + TOP_TAL_CARGO + " on the Trans-Atlantic East Bound, " + TOP_ECAMS_CARGO + " on the ECAMS South Bound, and " + TOP_NAX_CARGO + " on the NAX West Bound. The most quoted customer on each trade lane in Week " + reportPeriod + " was "+TOP_NAS_CUSTOMER+" on the NAS, "+TOP_TAL_CUSTOMER+" on the TAL, "+TOP_ECAMS_CUSTOMER+" on the ECAMS, and "+TOP_NAX_CUSTOMER+" on the NAX trade lane.", TEXT_FONT);
         paragraph.setFirstLineIndent(36f);
         return paragraph;
     }
